@@ -1,22 +1,6 @@
-# 02 <format> <flags> <port> <nbyteslo> <nbyteshi> <nports> <portsinpkt> <data1>
-# [<data2>..<dataN>]
-# ● <format>:
-# ○ 00: DMX style with initial break
-# ○ 01: Raw UART
-# ● <flags>:
-# ○ Bit 0 is set to start frame transmission (value is 128 to start transmission;
-# alternatively use the sync packet below and leave this set to 0)
-# ○ Bit 1-7 reserved
-# ● <port>: First splitter port number for this packet (1-16) or 0 for same data to all ports
-# ● <nbytes>: bytes per port (must be the same for all ports). Max 1400 decimal
-# ● <nports>: number of ports in use
-# ● <portsinpkt>: number of ports for which this packet contains data
-# ● Reserved bytes and bits must be set to 0
 from typing import List
-
 import bitstring
 from bitstring import BitStream
-
 from LEDNode import LEDNode
 
 

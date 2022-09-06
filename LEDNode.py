@@ -1,21 +1,3 @@
-# <break> 0x00 <gb1> <gb2> <sm> <id> <rgbwdata>
-# <gb1>, <gb2> is global brightness for side 1 (primary) & 2 (secondary) respectively (bit 0
-# ignored)
-# <sm> is smoothing value:
-# 0 : no smoothing, LEDs updated on receipt of new packet
-# >0 : LEDs updated 100 times/sec, with filtering of incoming packets to reduce
-# steppiness at low framerates. Useful values will be in the range 80-160 decimal,
-# optimal value will be content dependent.
-# <rgbwdata> is 864 or 432 ( dec) bytes of RGBW pixel data.
-# <id> bits 0..3 : Device ID 1..15. ID=0 broadcasts to all panels.
-# <id> bits 4,5 unused, must be set to 0
-# <id> bits 7,6 :
-# Bit 7 Bit 6 Function Packet length
-# 0 0 Full pixel addressability on both rings 864+5=869
-# 0 1 reserved
-# 1 0 Secondary ring shows copy of primary 432+5=437
-# 1 1 Secondary ring shows mirrored copy of primary 432+5=437
-
 import bitstring
 
 

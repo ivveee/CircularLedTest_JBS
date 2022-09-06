@@ -1,7 +1,5 @@
 import asyncio
-
 import asyncio_dgram
-
 from LEDNode import LEDNode
 from LEDOutput import App
 from Splitter import Splitter
@@ -36,6 +34,13 @@ def set_up_ventilator():
     return ventilator
 
 
+async def set_color(ventilator: SplitterVentilator, r, g, b, w):
+    for sps in ventilator.sps.values():
+        for data in sps.splitter.port_data_map:
+            data.set_all_pixels_primary(r, g, b, w)
+            data.set_all_pixels_secondary(r, g, b, w)
+
+
 async def entry_point():
     ventilator = set_up_ventilator()
     await ventilator.start()
@@ -55,8 +60,24 @@ async def entry_point():
         while True:
             data, remote_addr = await bserver.recv()
             print('Package 04')
+            for sim in simulators:
+                await sim.update()
 
-    await asyncio.gather(gui.exec(), ventilator.run_in_loop(), action_code(), *loops)
+    async def switch_color():
+        dt = 4
+        while True:
+            await asyncio.sleep(dt)
+            await set_color(ventilator, 255, 0, 0, 255)
+            await asyncio.sleep(dt)
+            await set_color(ventilator, 0, 255, 0, 255)
+            await asyncio.sleep(dt)
+            await set_color(ventilator, 0, 0, 255, 255)
+            await asyncio.sleep(dt)
+            await set_color(ventilator, 0, 0, 0, 255)
+            await asyncio.sleep(dt)
+            await set_color(ventilator, 255, 255, 255, 255)
+
+    await asyncio.gather(gui.exec(), ventilator.run_in_loop(), action_code(), *loops, switch_color())
 
 
 if __name__ == "__main__":

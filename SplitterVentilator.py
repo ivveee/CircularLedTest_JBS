@@ -1,18 +1,7 @@
-# If not all ports have received data when a packet with the “start” flag, or a broadcast sync packet
-# is received, any unspecified ports will output undefined data.
-# To minimize the chances of lost packets, it is recommended that packets should be sent to each
-# splitter in turn, then each port in turn. i.e. for 2 splitters, port 1 splitter 1, port 1 splitter 2, port 2
-# splitter 1, ports 2 splitter 2. This gives each splitter more time to process each packet.
 
-
-# Data-wise, in duplicated/mirrored mode, the packet length for each node (pair of rings) is 9.5mS
-# at 500kbaud. This means that for, say, 4 nodes, the maximum framerate would be approx 25fps.
-# The onboard smoothing function may be used to improve appearance at low framerates.
 import asyncio
 from typing import Dict
-
 import asyncio_dgram
-
 from Splitter import Splitter
 
 
