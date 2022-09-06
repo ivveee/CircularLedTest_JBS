@@ -24,6 +24,7 @@ class SplitterStream:
     def __init__(self, splitter: Splitter, id_net: int) -> None:
         super().__init__()
         self.splitter = splitter
+        self.id = id_net
         self.ip = f"{SplitterStream.active_ip}.{128 + id_net}"
 
     async def init_stream(self):

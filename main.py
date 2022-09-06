@@ -3,11 +3,12 @@ import asyncio
 import asyncio_dgram
 
 from LEDNode import LEDNode
+from LEDOutput import App
 from Splitter import Splitter
 from SplitterLedSimulator import SplitterLedSimulator
 from SplitterVentilator import SplitterVentilator
 
-num_of_splitters = 4
+num_of_splitters = 3
 
 
 def set_up_ventilator():
@@ -34,14 +35,6 @@ def set_up_ventilator():
 
     return ventilator
 
-    # node.set_all_pixels_primary(120, 0, 0, 120)
-
-    # await stream.send(splitter.encode02(0, 2).bytes)
-    # data, remote_addr = await stream.recv()
-    # print(f"Client received: {data.decode()!r}")
-
-    # stream.close()
-
 
 async def entry_point():
     ventilator = set_up_ventilator()
@@ -49,15 +42,21 @@ async def entry_point():
 
     simulators = []
     loops = []
-
+    gui = App()
     for i in range(0, num_of_splitters):
-        simulator = SplitterLedSimulator(ventilator.sps[i])
+        simulator = SplitterLedSimulator(ventilator.sps[i], gui)
         simulators.append(simulator)
         await simulator.start()
         loops.append(simulator.receive_loop())
 
     bserver = await asyncio_dgram.bind(("127.0.0.255", 16661))
-    await asyncio.gather(ventilator.run_in_loop(), *loops)
+
+    async def action_code():
+        while True:
+            data, remote_addr = await bserver.recv()
+            print('Package 04')
+
+    await asyncio.gather(gui.exec(), ventilator.run_in_loop(), action_code(), *loops)
 
 
 if __name__ == "__main__":
